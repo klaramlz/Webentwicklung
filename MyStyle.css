@@ -1,0 +1,27 @@
+p {
+    background: rgb(255, 0, 212);
+    color: white;
+}
+a {
+    font: Courier;
+    font: 14px Courier;
+    text-decoration: none;
+    color: white;
+    padding: 0px 5px 0px 5px;
+    border-right: 2px solid white;
+  }
+  
+  .mainNav {
+    height: 30px;
+    background: rgb(230, 62, 140);
+    padding-top: 7px;
+    padding-left: 5px;
+    margin-top: 20px;
+    box-shadow: 4px 6px grey;
+    overflow: hidden;
+  }
+  p {
+    background: #115ab7;
+    background: rgba(20, 123, 45, 0.5);
+    background: hsla(0, 100%, 50%, 1);
+  }
