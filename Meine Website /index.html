@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracker</title>
+    <link rel="stylesheet" href="MyStyle.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Mein Budget Tracker</h1>
+        
+        <!-- Eingabeformular -->
+        <div class="formular">
+            <h2>Neue Transaktion</h2>
+            <form>
+                <div class="eingabe">
+                    <label>Datum:</label>
+                    <input type="date">
+                </div>
+                
+                <div class="eingabe">
+                    <label>Typ:</label>
+                    <div>
+                        <input type="radio" name="typ" checked> Einnahme
+                        <input type="radio" name="typ"> Ausgabe
+                    </div>
+                </div>
+                
+                <div class="eingabe">
+                    <label>Betrag (€):</label>
+                    <input type="number" step="0.01">
+                </div>
+                
+                <div class="eingabe">
+                    <label>Beschreibung:</label>
+                    <input type="text">
+                </div>
+                
+                <button type="submit">Hinzufügen</button>
+            </form>
+        </div>
+        
+        <!-- Transaktionsliste -->
+        <div class="liste">
+            <h2>Letzte Transaktionen</h2>
+            
+            <div class="eintrag einnahme">
+                <p>15.05.2023 - Gehalt</p>
+                <p class="betrag">+2.500,00 €</p>
+            </div>
+            
+            <div class="eintrag ausgabe">
+                <p>16.05.2023 - Miete</p>
+                <p class="betrag">-850,00 €</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
