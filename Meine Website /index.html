@@ -5,54 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Budget Tracker</title>
     <link rel="stylesheet" href="MyStyle.css">
+    <script defer src="app.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Mein Budget Tracker</h1>
+        <!-- Header wird per JavaScript eingefügt -->
         
-        <!-- Eingabeformular -->
+        <!-- Formularbereich -->
         <div class="formular">
-            <h2>Neue Transaktion</h2>
-            <form>
+            <h2 id="formular-titel">Neue Transaktion</h2>
+            <form id="transaktions-form">
+                <input type="hidden" id="bearbeitungs-id">
+                
                 <div class="eingabe">
-                    <label>Datum:</label>
-                    <input type="date">
+                    <label for="datum">Datum:</label>
+                    <input type="date" id="datum" required>
                 </div>
                 
                 <div class="eingabe">
                     <label>Typ:</label>
-                    <div>
-                        <input type="radio" name="typ" checked> Einnahme
-                        <input type="radio" name="typ"> Ausgabe
+                    <div class="typ-auswahl">
+                        <input type="radio" id="einnahme" name="typ" value="einnahme" checked>
+                        <label for="einnahme">Einnahme</label>
+                        <input type="radio" id="ausgabe" name="typ" value="ausgabe">
+                        <label for="ausgabe">Ausgabe</label>
                     </div>
                 </div>
                 
                 <div class="eingabe">
-                    <label>Betrag (€):</label>
-                    <input type="number" step="0.01">
+                    <label for="betrag">Betrag (€):</label>
+                    <input type="number" id="betrag" step="0.01" required>
                 </div>
                 
                 <div class="eingabe">
-                    <label>Beschreibung:</label>
-                    <input type="text">
+                    <label for="beschreibung">Beschreibung:</label>
+                    <input type="text" id="beschreibung" required>
                 </div>
                 
-                <button type="submit">Hinzufügen</button>
+                <div class="buttons">
+                    <button type="submit" id="speichern-btn">Hinzufügen</button>
+                    <button type="button" id="abbrechen-btn" class="secondary">Abbrechen</button>
+                </div>
             </form>
         </div>
         
-        <!-- Transaktionsliste -->
+        <!-- Transaktionsliste (wird dynamisch befüllt) -->
         <div class="liste">
-            <h2>Letzte Transaktionen</h2>
-            
-            <div class="eintrag einnahme">
-                <p>15.05.2023 - Gehalt</p>
-                <p class="betrag">+2.500,00 €</p>
-            </div>
-            
-            <div class="eintrag ausgabe">
-                <p>16.05.2023 - Miete</p>
-                <p class="betrag">-850,00 €</p>
+            <h2>Transaktionen</h2>
+            <div id="transaktions-liste"></div>
+        </div>
+        
+        <!-- Löschbestätigungs-Dialog -->
+        <div id="loesch-dialog" class="dialog">
+            <div class="dialog-inhalt">
+                <p>Möchten Sie diese Transaktion wirklich löschen?</p>
+                <div class="dialog-buttons">
+                    <button id="loeschen-bestaetigen">Ja, löschen</button>
+                    <button id="loeschen-abbrechen" class="secondary">Abbrechen</button>
+                </div>
             </div>
         </div>
     </div>
