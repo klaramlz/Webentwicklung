@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracker</title>
+    <link rel="stylesheet" href="MyStyle.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Budget Tracker</h1>
+    </header>
+    <div class="container">
+
+        <h2 id="formular-titel">Neue Transaktion</h2>
+        <form id="transaktions-form">
+            <input type="hidden" id="bearbeitungs-id">
+
+            <label for="datum">Datum:</label>
+            <input type="date" id="datum" required>
+
+            <label>Typ:</label>
+            <label><input type="radio" name="typ" value="Einnahme" checked> Einnahme</label>
+            <label><input type="radio" name="typ" value="Ausgabe"> Ausgabe</label>
+
+            <label for="betrag">Betrag (€):</label>
+            <input type="number" id="betrag" step="0.01" required>
+
+            <label for="beschreibung">Beschreibung:</label>
+            <input type="text" id="beschreibung" required>
+
+            <button type="submit" id="speichern-btn">Hinzufügen</button>
+            <button type="button" id="abbrechen-btn" class="secondary">Abbrechen</button>
+        </form>
+
+        <h2>Transaktionen</h2>
+        <div id="transaktions-liste"></div>
+    </div>
+
+    <!-- JavaScript am Ende des Bodys -->
+    <script>
+        const form = document.getElementById('transaktions-form');
+        const abbrechenBtn = document.getElementById('abbrechen-btn');
+        const listeContainer = document.getElementById('transaktions-liste');
+        const bearbeitungsIdInput = document.getElementById('bearbeitungs-id');
+
+        async function ladeTransaktionen() {
+            const response = await fetch('http://localhost:3000/api/transaktionen');
+            const daten = await response.json();
+
+            listeContainer.innerHTML = '<table><thead><tr><th>Datum</th><th>Typ</th><th>Betrag</th><th>Beschreibung</th><th>Aktion</th></tr></thead><tbody></tbody></table>';
+            const tbody = listeContainer.querySelector('tbody');
+
+            daten.forEach(t => {
+                const zeile = document.createElement('tr');
+                zeile.innerHTML = `
+                    <td>${t.Datum}</td>
+                    <td>${t.Typ}</td>
+                    <td>${t.Betrag} €</td>
+                    <td>${t.Beschreibung}</td>
+                    <td>
+                        <button onclick="bearbeiten(${t.id})">✏️</button>
+                        <button onclick="loeschen(${t.id})">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(zeile);
+            });
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = bearbeitungsIdInput.value;
+            const datum = document.getElementById('datum').value;
+            const typ = document.querySelector('input[name="typ"]:checked').value;
+            const betrag = parseFloat(document.getElementById('betrag').value);
+            const beschreibung = document.getElementById('beschreibung').value;
+
+            const daten = { datum, typ, betrag, beschreibung };
+
+            const url = id ? `http://localhost:3000/api/transaktionen/${id}` : 'http://localhost:3000/api/transaktionen';
+            const method = id ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(daten)
+            });
+
+            if (response.ok) {
+                ladeTransaktionen();
+                form.reset();
+                bearbeitungsIdInput.value = '';
+                document.getElementById('formular-titel').innerText = 'Neue Transaktion';
+                document.getElementById('speichern-btn').innerText = 'Hinzufügen';
+            } else {
+                alert('Fehler beim Speichern der Transaktion.');
+            }
+        });
+
+        abbrechenBtn.addEventListener('click', () => {
+            form.reset();
+            bearbeitungsIdInput.value = '';
+            document.getElementById('formular-titel').innerText = 'Neue Transaktion';
+            document.getElementById('speichern-btn').innerText = 'Hinzufügen';
+        });
+
+        async function bearbeiten(id) {
+            const response = await fetch('http://localhost:3000/api/transaktionen');
+            const daten = await response.json();
+            const t = daten.find(e => e.id === id);
+            if (t) {
+                document.getElementById('datum').value = t.Datum;
+                document.querySelector(`input[name="typ"][value="${t.Typ}"]`).checked = true;
+                document.getElementById('betrag').value = t.Betrag;
+                document.getElementById('beschreibung').value = t.Beschreibung;
+                bearbeitungsIdInput.value = t.id;
+                document.getElementById('formular-titel').innerText = 'Transaktion bearbeiten';
+                document.getElementById('speichern-btn').innerText = 'Speichern';
+            }
+        }
+
+        async function loeschen(id) {
+            if (confirm('Möchten Sie diese Transaktion wirklich löschen?')) {
+                const response = await fetch(`http://localhost:3000/api/transaktionen/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    ladeTransaktionen();
+                } else {
+                    alert('Fehler beim Löschen.');
+                }
+            }
+        }
+
+        // Initial laden
+        ladeTransaktionen();
+    </script>
+</body>
+</html>
