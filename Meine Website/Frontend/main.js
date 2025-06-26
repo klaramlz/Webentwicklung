@@ -1,4 +1,4 @@
-// === Frontend‑Logik für Budget‑Tracker ================================
+//  Frontend‑Logik für Budget‑Tracker 
 
 // DOM‑Referenzen
 const form                = document.getElementById('transactions-form');
@@ -6,9 +6,9 @@ const abbrechenBtn        = document.getElementById('abbrechen-btn');
 const listeContainer      = document.getElementById('transaktions-liste');
 const bearbeitungsIdInput = document.getElementById('bearbeitungs-id');
 
-// ---------------------------------------------------------------------
+
 // Transaktionen vom Server laden und Tabelle aufbauen
-// ---------------------------------------------------------------------
+
 async function ladeTransaktionen () {
   const response = await fetch('/api/transaktionen');
   const daten    = await response.json();
@@ -33,9 +33,9 @@ async function ladeTransaktionen () {
   });
 }
 
-// ---------------------------------------------------------------------
+
 // Formular‑Submit (neu oder bearbeiten)
-// ---------------------------------------------------------------------
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -68,9 +68,8 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// ---------------------------------------------------------------------
 // Abbrechen‑Button
-// ---------------------------------------------------------------------
+
 abbrechenBtn.addEventListener('click', () => {
   form.reset();
   bearbeitungsIdInput.value = '';
@@ -78,9 +77,9 @@ abbrechenBtn.addEventListener('click', () => {
   document.getElementById('speichern-btn').innerText  = 'Hinzufügen';
 });
 
-// ---------------------------------------------------------------------
+
 // Funktionen global machen (für onclick‑Attribute)
-// ---------------------------------------------------------------------
+
 window.bearbeiten = async function (id) {
   const daten = await fetch('/api/transaktionen').then(r => r.json());
   const t     = daten.find(e => e.id === id);
@@ -106,7 +105,7 @@ window.loeschen = async function (id) {
   }
 };
 
-// ---------------------------------------------------------------------
+
 // Initialer Ladevorgang
-// ---------------------------------------------------------------------
+
 ladeTransaktionen();

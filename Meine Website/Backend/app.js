@@ -6,14 +6,14 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-/* ------------------------------------- */
+
 const app  = express();
 const port = 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
 
-/* ---------- SQLite ------------------- */
+/*  SQLite  */
 const dbPath = path.join(__dirname, 'datenbank.db');
 const db     = new Database(dbPath);
 
@@ -32,11 +32,11 @@ try {
   `).run();
 }
 
-/* -------- Middleware --------------- */
+/*  Middleware */
 app.use(cors());
 app.use(bodyParser.json());
 
-/* ---------- Frontend  -------------- */
+/* Frontend  */
 const publicPath = path.join(__dirname, '../Frontend');
 app.use(express.static(publicPath));
 
@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-/* ----------- API ------------------- */
+/* API */
 /* Alle Transaktionen */
 app.get('/api/transaktionen', (req, res) => {
   const rows = db.prepare('SELECT * FROM Transaktionen ORDER BY Datum DESC').all();
@@ -85,7 +85,7 @@ app.delete('/api/transaktionen/:id', (req, res) => {
   res.json({ success: true });
 });
 
-/* ---------- Serverstart ------------ */
+/*  Serverstart  */
 app.listen(port, () => {
   console.log(`Server läuft auf http://localhost:${port}`);
 });
